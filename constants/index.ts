@@ -6,6 +6,6 @@ export const sidebarLinks = [
   {
     label: 'Personal Room',
     route: '/personal-room',
-    imgUrl: './icons/add-presonal.svg',
+    imgUrl: './icons/add-personal.svg',
   },
 ]
