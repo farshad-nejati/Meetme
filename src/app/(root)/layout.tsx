@@ -1,9 +1,10 @@
 import React, { PropsWithChildren } from 'react'
+import StreamVideoProvider from '../../../providers/StreamClientProvider'
 
-const Rootlayout = ({children}: PropsWithChildren) => {
+const Rootlayout = ({ children }: PropsWithChildren) => {
   return (
     <main>
-        {children}
+      <StreamVideoProvider>{children}</StreamVideoProvider>
     </main>
   )
 }

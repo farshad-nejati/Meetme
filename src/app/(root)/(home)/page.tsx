@@ -1,6 +1,6 @@
 import MeetingTypeList from '@/components/MeetingTypeList'
 
-const Home = () => {
+const Home = async () => {
   const now = new Date()
 
   const time = now.toLocaleTimeString('en-US', {
