@@ -38,10 +38,10 @@ const MobileNav = () => {
                 src="/icons/logo.svg"
                 width={32}
                 height={32}
-                alt="miting logo"
+                alt="Meet me logo"
                 className="max-sm:size-10"
               />
-              <p className="text-[26px] font-extrabold text-white">Miting</p>
+              <p className="text-[26px] font-extrabold text-white">Meet me</p>
             </Link>
           </SheetClose>
 
