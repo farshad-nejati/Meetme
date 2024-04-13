@@ -13,7 +13,7 @@ const MeetingSetup = ({
 }: {
   setIsSetupComplete: (value: boolean) => void
 }) => {
-  const [isMicCamToggleOn, setIsMicCamToggleOn] = useState(false)
+  const [isMicCamOn, setIsMicCamOn] = useState(false)
   const call = useCall()
 
   if (!call) {
@@ -21,14 +21,14 @@ const MeetingSetup = ({
   }
 
   useEffect(() => {
-    if (isMicCamToggleOn) {
-      call?.camera.disable()
-      call?.microphone.disable()
-    } else {
+    if (isMicCamOn) {
       call?.camera.enable()
       call?.microphone.enable()
+    } else {
+      call?.camera.disable()
+      call?.microphone.disable()
     }
-  }, [isMicCamToggleOn, call?.camera, call?.microphone])
+  }, [isMicCamOn, call?.camera, call?.microphone])
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center text-white gap-6">
@@ -39,10 +39,10 @@ const MeetingSetup = ({
         <label className="flex items-center justify-center gap-2 font-medium">
           <input
             type="checkbox"
-            checked={isMicCamToggleOn}
-            onChange={(e) => setIsMicCamToggleOn(e.target.checked)}
+            checked={isMicCamOn}
+            onChange={(e) => setIsMicCamOn(e.target.checked)}
           />
-          Join with mic and camera off
+          Turn on mic and camera
         </label>
         <DeviceSettings />
       </div>
