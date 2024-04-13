@@ -4,15 +4,18 @@
 
 import { useRouter } from 'next/navigation'
 import { useGetCalls } from '../../hooks/useGetCalls'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Call, CallRecording } from '@stream-io/video-react-sdk'
 import MeetingCard from './MeetingCard'
 import Loader from './Loader'
+import { toast, useToast } from './ui/use-toast'
 
 const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
   const { endedCall, upcomingCalls, callRecordings, isLoading } = useGetCalls()
   const router = useRouter()
-  const [recordings, setrecordings] = useState<CallRecording[]>([])
+  const [recordings, setRecordings] = useState<CallRecording[]>([])
+
+  const { toast } = useToast()
 
   const getCalls = () => {
     switch (type) {
@@ -41,6 +44,26 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
     }
   }
 
+  useEffect(() => {
+    const fetchRecordings = async () => {
+      try {
+        const callData = await Promise.all(
+          callRecordings.map((meeting) => meeting.queryRecordings())
+        )
+
+        const recordings = callData
+          .filter((call) => call.recordings.length > 0)
+          .flatMap((call) => call.recordings)
+
+        setRecordings(recordings)
+      } catch (error) {
+        toast({ title: 'Try again later' })
+      }
+    }
+
+    if (type === 'recordings') fetchRecordings()
+  }, [type, callRecordings])
+
   const calls = getCalls()
   const noCallsMessage = getNoCallsMessage()
 
@@ -60,17 +83,16 @@ const CallList = ({ type }: { type: 'ended' | 'upcoming' | 'recordings' }) => {
                 : '/icons/recordings.svg'
             }
             title={
-              (meeting as Call).state.custom.description.substring(0, 26) ||
+              (meeting as Call).state?.custom.description.substring(0, 26) ||
+              meeting.filename.substring(0, 20) ||
               'No description'
             }
             date={
-              meeting.state.startsAt?.toLocaleString() ||
+              meeting.state?.startsAt?.toLocaleString() ||
               meeting.start_time.toLocaleString()
             }
             isPreviousMeeting={type === 'ended'}
-            buttonIcon1={
-              type === 'recordings' ? '/icons/recordings.svg' : undefined
-            }
+            buttonIcon1={type === 'recordings' ? '/icons/play.svg' : undefined}
             buttonText={type === 'recordings' ? 'Play' : 'Start'}
             link={
               type === 'recordings'
